@@ -26,12 +26,23 @@ if not os.path.exists("static/tickets"):
 # ====================================
 # 1️⃣ Generate QR Code
 # ====================================
+import qrcode
+import qrcode
+
 def generate_qr_code(ticket_id, user_name):
-    """Generate a QR code for the ticket."""
-    qr_data = f"{user_name}"
-    qr = qrcode.make(qr_data)
+    qr_data = f"TICKET:{ticket_id}|NAME:{user_name}"
+    qr = qrcode.QRCode(
+        version=5,  # Increases size for better scanning
+        error_correction=qrcode.constants.ERROR_CORRECT_H,  # High error correction
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    img = qr.make_image(fill="black", back_color="white")
+
     qr_path = f"static/tickets/{ticket_id}.png"
-    qr.save(qr_path)
+    img.save(qr_path)
     return qr_path
 
 # ====================================
@@ -114,11 +125,12 @@ from oauth2client.service_account import ServiceAccountCredentials
 def get_google_sheet():
     creds = ServiceAccountCredentials.from_json_keyfile_name("./secret.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
     client = gspread.authorize(creds)
-    sheet = client.open("Your Google Sheet Name").sheet1  # Select first sheet
+    sheet = client.open("make it work").sheet1  # Select first sheet
     return sheet
 
 @app.route("/check_in", methods=["POST"])
 def check_in():
+    print("scanned")
     data = request.json
     name = data.get("name")
     
