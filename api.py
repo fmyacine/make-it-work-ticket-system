@@ -13,15 +13,14 @@ cred = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FIL
 
 
 
-def insert(name,phone,email,major,year,linkedin,fb,motive,contribute,goals,teams):
+def insert(name,familyname,phonenumber,email):
     try:
         service = build("sheets", "v4", credentials=cred)
 
         values = [
         [
-            name,phone,email,major,year,linkedin,fb,motive,contribute,goals,teams
+            name,familyname,phonenumber,email
         ],
-
     ]
 
 
