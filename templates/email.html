@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .email-container {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            border: 1px solid #ddd;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h2>🎟️ Your Ticket for {{ event_name }}</h2>
+        <p>Hello {{ user_name }},</p>
+        <p>Thank you for booking your ticket! Attached is your e-ticket.</p>
+        <p><b>Ticket ID:</b> {{ ticket_id }}</p>
+        <a class="button" href="{{ ticket_link }}">Download Ticket</a>
+        <p>See you at the event! 🎉</p>
+    </div>
+</body>
+</html>
