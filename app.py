@@ -110,11 +110,9 @@ def admin():
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-app = Flask(__name__)
-
 # Connect to Google Sheets
 def get_google_sheet():
-    creds = ServiceAccountCredentials.from_json_keyfile_name("your_google_credentials.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+    creds = ServiceAccountCredentials.from_json_keyfile_name("./secret.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
     client = gspread.authorize(creds)
     sheet = client.open("Your Google Sheet Name").sheet1  # Select first sheet
     return sheet
@@ -129,6 +127,7 @@ def check_in():
     # Find the row containing the person's name
     cell = sheet.find(name)
     if cell:
+        print({"message": "Check-in successful!"})
         return jsonify({"message": "Check-in successful!"}), 200
     return jsonify({"error": "Name not found!"}), 404
 
@@ -137,4 +136,4 @@ def check_in():
 # Run Flask App
 # ====================================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)

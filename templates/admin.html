@@ -5,17 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Scanner</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        #reader {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            color: green;
+        }
+    </style>
 </head>
 <body>
-    <h2>Scan Ticket QR Code</h2>
-    <div id="reader" style="width: 300px;"></div>
-    <p id="result"></p>
+    <h2 style="text-align: center;">Scan Ticket QR Code</h2>
+    <div id="reader"></div>
+    <p id="result">Waiting for scan...</p>
 
     <script>
         function onScanSuccess(decodedText, decodedResult) {
             document.getElementById("result").innerText = "Scanned: " + decodedText;
             
-            // Send the name to Flask API
+            // Send the scanned name to Flask API
             fetch("/check_in", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -26,8 +40,18 @@
             .catch(error => console.error("Error:", error));
         }
 
-        let scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-        scanner.render(onScanSuccess);
+        function onScanError(errorMessage) {
+            console.warn("Scan error:", errorMessage);
+        }
+
+        let scanner = new Html5QrcodeScanner("reader", {
+            fps: 30, // Faster scanning
+            qrbox: { width: 250, height: 250 }, // Optimal box size
+            rememberLastUsedCamera: true, // Saves last used camera
+            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+        });
+
+        scanner.render(onScanSuccess, onScanError);
     </script>
 </body>
 </html>
