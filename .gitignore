@@ -1,2 +1,3 @@
 /static/tickets/
 secret.json
+/__pycache__/

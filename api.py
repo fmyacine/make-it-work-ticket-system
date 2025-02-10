@@ -7,19 +7,19 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SERVICE_ACCOUNT_FILE = '../secret.json'
+SERVICE_ACCOUNT_FILE = './secret.json'
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
 cred = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
 
 
-def insert(name,familyname,phonenumber,email):
+def insert(fullname,phonenumber,email):
     try:
         service = build("sheets", "v4", credentials=cred)
 
         values = [
         [
-            name,familyname,phonenumber,email
+            fullname,phonenumber,email
         ],
     ]
 
@@ -30,7 +30,7 @@ def insert(name,familyname,phonenumber,email):
             .values()
             .append(
                 spreadsheetId=sheetID,
-                range='Sheet1!A2:K2',
+                range='Sheet1!A2:D2',
                 insertDataOption='INSERT_ROWS',
                 valueInputOption='RAW',
                 body=body

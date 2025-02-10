@@ -6,6 +6,7 @@ from io import BytesIO
 import random
 import os
 
+from api import insert
 app = Flask(__name__)
 
 # 🔹 Flask-Mail Configuration
@@ -27,7 +28,7 @@ if not os.path.exists("static/tickets"):
 # ====================================
 def generate_qr_code(ticket_id, user_name):
     """Generate a QR code for the ticket."""
-    qr_data = f"Ticket ID: {ticket_id} - Name: {user_name}"
+    qr_data = f"{user_name}"
     qr = qrcode.make(qr_data)
     qr_path = f"static/tickets/{ticket_id}.png"
     qr.save(qr_path)
@@ -93,13 +94,44 @@ def book_ticket():
     user_email = data.get("email")
     event_name = data.get("event_name", "Tech Conference 2025")  
     ticket_id = f"TKT-{random.randint(1000,9999)}"
-
+    insert(user_name,1,user_email)
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
 
     send_ticket_email(user_email, user_name, event_name, ticket_id)
 
     return jsonify({"message": "Ticket booked successfully!", "ticket_id": ticket_id})
+
+
+@app.route("/admin",methods=["GET"])
+def admin():
+    return render_template("admin.html")
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+app = Flask(__name__)
+
+# Connect to Google Sheets
+def get_google_sheet():
+    creds = ServiceAccountCredentials.from_json_keyfile_name("your_google_credentials.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+    client = gspread.authorize(creds)
+    sheet = client.open("Your Google Sheet Name").sheet1  # Select first sheet
+    return sheet
+
+@app.route("/check_in", methods=["POST"])
+def check_in():
+    data = request.json
+    name = data.get("name")
+    
+    sheet = get_google_sheet()
+    
+    # Find the row containing the person's name
+    cell = sheet.find(name)
+    if cell:
+        return jsonify({"message": "Check-in successful!"}), 200
+    return jsonify({"error": "Name not found!"}), 404
+
 
 # ====================================
 # Run Flask App
