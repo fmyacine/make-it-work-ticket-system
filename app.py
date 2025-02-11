@@ -10,7 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import format_cell_range, CellFormat, Color
 
 
-from api import insert
+from api import insert,get_next_ticket_id
 app = Flask(__name__)
 
 # 🔹 Flask-Mail Configuration
@@ -92,8 +92,9 @@ def book_ticket():
 
     user_name = data.get("name")
     user_email = data.get("email")
-    event_name = data.get("event_name", "Tech Conference 2025")  
-    ticket_id = f"TKT-{random.randint(1000,9999)}"
+    event_name = data.get("event_name", "Tech Conference 2025")
+    ticket_count = get_next_ticket_id()
+    ticket_id = f"{ticket_count}"
     insert(user_name,1,user_email)
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
