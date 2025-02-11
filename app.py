@@ -5,6 +5,10 @@ import qrcode
 from io import BytesIO
 import random
 import os
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from gspread_formatting import format_cell_range, CellFormat, Color
+
 
 from api import insert
 app = Flask(__name__)
@@ -23,12 +27,6 @@ mail = Mail(app)
 if not os.path.exists("static/tickets"):
     os.makedirs("static/tickets")
 
-# ====================================
-# 1️⃣ Generate QR Code
-# ====================================
-import qrcode
-import qrcode
-
 def generate_qr_code(ticket_id, user_name):
     qr_data = f"{user_name}"
     qr = qrcode.QRCode(
@@ -45,9 +43,6 @@ def generate_qr_code(ticket_id, user_name):
     img.save(qr_path)
     return qr_path
 
-# ====================================
-# 2️⃣ Generate PDF Ticket
-# ====================================
 def generate_ticket(user_name, event_name, ticket_id):
     """Generate a PDF ticket with a QR code."""
     pdf = FPDF()
@@ -68,9 +63,6 @@ def generate_ticket(user_name, event_name, ticket_id):
 
     return pdf_path
 
-# ====================================
-# 3️⃣ Send Ticket Email
-# ====================================
 def send_ticket_email(user_email, user_name, event_name, ticket_id):
     """Send a custom email with the ticket attached."""
     ticket_path = generate_ticket(user_name, event_name, ticket_id)
@@ -93,9 +85,6 @@ def send_ticket_email(user_email, user_name, event_name, ticket_id):
 
     mail.send(msg)
 
-# ====================================
-# 4️⃣ API Route to Book Ticket
-# ====================================
 @app.route("/book-ticket", methods=["POST"])
 def book_ticket():
     """Receive JSON request, generate ticket, and send via email."""
@@ -118,15 +107,11 @@ def book_ticket():
 def admin():
     return render_template("admin.html")
 
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
-from gspread_formatting import format_cell_range, CellFormat, Color
-# Connect to Google Sheets
 def get_google_sheet():
     creds = ServiceAccountCredentials.from_json_keyfile_name("./secret.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
     client = gspread.authorize(creds)
-    sheet = client.open("make it work").sheet1  # Select first sheet
+    sheet = client.open("make it work").sheet1
     return sheet
 
 @app.route("/check_in", methods=["POST"])
@@ -142,16 +127,12 @@ def check_in():
     if cell:
         # Color the row green if name is found
         row_number = cell.row
-        range_to_color = f"A{row_number}:Z{row_number}"  # Adjust range as necessary
-        fmt = CellFormat(backgroundColor=Color(0, 1, 0))  # RGB for green color
+        range_to_color = f"A{row_number}:Z{row_number}"  
+        fmt = CellFormat(backgroundColor=Color(0, 1, 0))  
         format_cell_range(sheet, range_to_color, fmt)
         print({"message": "Check-in successful!"})
         return jsonify({"message": "Check-in successful!"}), 200
     return jsonify({"error": "Name not found!"}), 200
 
-
-# ====================================
-# Run Flask App
-# ====================================
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
