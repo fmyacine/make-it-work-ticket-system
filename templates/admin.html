@@ -26,7 +26,11 @@
     <p id="result">Waiting for scan...</p>
 
     <script>
+        let scanner; // Declare the scanner variable in a higher scope
+
+        // Callback function for a successful scan
         function onScanSuccess(decodedText, decodedResult) {
+            
             document.getElementById("result").innerText = "Scanned: " + decodedText;
             
             // Send the scanned name to Flask API
@@ -38,31 +42,33 @@
             .then(response => response.json())
             .then(data => alert(data.message))
             .catch(error => console.error("Error:", error));
+
+            // Stop the camera and scanner after the first scan
+
+            // Prevent further scanning after the first successful scan
+            scanner.clear().then(() => {
+                console.log("Scanner cleared.");
+            }).catch((err) => {
+                console.error("Error clearing the scanner: ", err);
+            });
         }
 
+        // Callback function for scan errors
         function onScanError(errorMessage) {
             console.warn("Scan error:", errorMessage);
         }
-        const scanner = new Html5QrcodeScanner("reader", {
-    fps: 10,               // Increase frame rate for better detection
-    qrbox: { width: 250, height: 250 }, // Set a fixed scan area
-    aspectRatio: 1.0,
-    experimentalFeatures: {
-        useBarCodeDetectorIfSupported: true // Use optimized scanner
-    }
-});
 
-scanner.render(successCallback, errorCallback);
+        // Initialize and start the scanner
+        scanner = new Html5QrcodeScanner("reader", {
+            fps: 10,               // Increase frame rate for better detection
+            qrbox: { width: 250, height: 250 }, // Set a fixed scan area
+            aspectRatio: 1.0,
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true // Use optimized scanner
+            }
+        });
 
-function successCallback(decodedText, decodedResult) {
-    console.log("Scanned:", decodedText);
-    document.getElementById("result").innerText = decodedText;
-}
-
-function errorCallback(errorMessage) {
-    console.log("Scan Error:", errorMessage);
-}
-
+        // Render the scanner and start scanning
         scanner.render(onScanSuccess, onScanError);
     </script>
 </body>

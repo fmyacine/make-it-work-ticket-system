@@ -30,10 +30,10 @@ import qrcode
 import qrcode
 
 def generate_qr_code(ticket_id, user_name):
-    qr_data = f"TICKET:{ticket_id}|NAME:{user_name}"
+    qr_data = f"{user_name}"
     qr = qrcode.QRCode(
-        version=5,  # Increases size for better scanning
-        error_correction=qrcode.constants.ERROR_CORRECT_H,  # High error correction
+        version=5,  
+        error_correction=qrcode.constants.ERROR_CORRECT_H,  
         box_size=10,
         border=4,
     )
@@ -121,6 +121,7 @@ def admin():
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+from gspread_formatting import format_cell_range, CellFormat, Color
 # Connect to Google Sheets
 def get_google_sheet():
     creds = ServiceAccountCredentials.from_json_keyfile_name("./secret.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
@@ -139,9 +140,14 @@ def check_in():
     # Find the row containing the person's name
     cell = sheet.find(name)
     if cell:
+        # Color the row green if name is found
+        row_number = cell.row
+        range_to_color = f"A{row_number}:Z{row_number}"  # Adjust range as necessary
+        fmt = CellFormat(backgroundColor=Color(0, 1, 0))  # RGB for green color
+        format_cell_range(sheet, range_to_color, fmt)
         print({"message": "Check-in successful!"})
         return jsonify({"message": "Check-in successful!"}), 200
-    return jsonify({"error": "Name not found!"}), 404
+    return jsonify({"error": "Name not found!"}), 200
 
 
 # ====================================
