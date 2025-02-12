@@ -80,40 +80,63 @@ def generate_event_ticket(user_name, event_name, ticket_id):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
+    
+    page_width = pdf.w
 
-    # Event Name
-    pdf.set_font("Arial", "B", 24)
-    pdf.cell(0, 20, event_name, ln=True, align="L")
-    pdf.ln(10)
+    # Image properties
+    # Get page width
+    page_width = pdf.w
+
+    # Image properties
+    image_path = "static/CDECLOGO.png"  # Make sure the path is correct
+    image_width = 50  # Adjust based on your image size
+    image_x = (page_width - image_width) / 3  # Center it
+    image_y = 10  # Adjust Y position to place it at the top
+
+    # Add image
+    pdf.image(image_path, x=image_x, y=image_y, w=image_width)
+
+    
+    # Image properties
+    image_path = "static/makeitworklogojpg.jpg"  # Make sure the path is correct
+    image_width = 50  # Adjust based on your image size
+    image_x = 2 * (page_width - image_width) / 3  # Center it
+    image_y = 10  # Adjust Y position to place it at the top
+
+    # Add image
+    pdf.image(image_path, x=image_x, y=image_y, w=image_width)
+
+    # Move cursor below the image
+    pdf.ln(60)  # Adjust spacing based on image height
 
     # Event Details
     pdf.set_font("Arial", "B", 20)
-    pdf.multi_cell(0, 10, "Salon de l'Emploi Emploitic Connect 2024")
+    pdf.multi_cell(0, 10, "Make It Work 2025")
     
     pdf.set_font("Arial", "B", 16)
-    pdf.cell(0, 10, "Accès au Salon Emploitic Connect", ln=True)
+    pdf.cell(0, 10, "Ticket for Make It Work Event", ln=True)
     
     pdf.set_font("Arial", "", 12)
-    pdf.multi_cell(0, 10, "La Coupole, Complexe Olympique Mohamed Boudiaf, Dely Ibrahim 16000, Algérie" )
+    pdf.multi_cell(0, 10, "Saad Dahleb Blida University, Auditorim, Ouled Yaich 09000, Algeria" )
     
-    pdf.cell(0, 10, "Samedi 27 janvier 2024 à 09:00 - Dimanche 28 janvier 2024 à 15:00 (heure : Algérie)", ln=True)
+    pdf.cell(0, 10, "Samedi 25 Febraury 2025 at 09:00 - samedi 25 february 2025 At 15:00 (heure : Algérie)", ln=True)
     
-    # Order Info
-    pdf.cell(0, 10, "Commande #8784135539", ln=True)
-    pdf.cell(0, 10, "Commande gratuite", ln=True)
-
     # Order Details
     pdf.ln(10)
     pdf.set_font("Arial", "B", 14)
     pdf.cell(0, 10, "Informations de commande", ln=True)
     pdf.set_font("Arial", "", 12)
-    pdf.multi_cell(0, 10, f"Commande nº 8784135539. Commandé par {user_name} le 2024-01-26T15:21:19.491000" )
+    from datetime import datetime
 
+    pdf.multi_cell(0, 10, f"Commandé par {user_name} le {datetime.now().isoformat()}")
+    pdf.ln(40)
     # Generate and add QR code
     qr_code_path = generate_qr_code(ticket_id, user_name)
     
     try:
+        pdf.ln(40)
         pdf.image(qr_code_path, x=150, y=120, w=40)
+        pdf.ln(40)  
     except Exception as e:
         print(f"Error adding QR code: {e}")
 
