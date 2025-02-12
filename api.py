@@ -1,9 +1,6 @@
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -67,13 +64,13 @@ from fpdf import FPDF
 import qrcode
 def generate_qr_code(ticket_id, user_name):
     """Generate a QR code and return its file path."""
-    qr_data = f"Ticket ID: {ticket_id}\nName: {user_name}"
+    qr_data = f"{user_name}"
     qr = qrcode.make(qr_data)
     qr_path = f"static/tickets/{ticket_id}.png"
     qr.save(qr_path)
     return qr_path
 
-def generate_event_ticket(user_name, event_name, ticket_id):
+def generate_event_ticket(user_name,  ticket_id):
     """Generate a PDF ticket with event details and a QR code."""
     
     # Initialize PDF
@@ -89,15 +86,12 @@ def generate_event_ticket(user_name, event_name, ticket_id):
 
     # Image properties
     image_path = "static/CDECLOGO.png"  # Make sure the path is correct
-    image_width = 50  # Adjust based on your image size
-    image_x = (page_width - image_width) / 3  # Center it
-    image_y = 10  # Adjust Y position to place it at the top
+    image_width = 50  
+    image_x = (page_width - image_width) / 3  
+    image_y = 10  
 
-    # Add image
     pdf.image(image_path, x=image_x, y=image_y, w=image_width)
 
-    
-    # Image properties
     image_path = "static/makeitworklogojpg.jpg"  # Make sure the path is correct
     image_width = 50  # Adjust based on your image size
     image_x = 2 * (page_width - image_width) / 3  # Center it
@@ -145,7 +139,6 @@ def generate_event_ticket(user_name, event_name, ticket_id):
     pdf.set_font("Arial", "", 8)
     pdf.cell(40, 10, f"{ticket_id}", ln=True, align="C")
 
-    # Save the PDF
     pdf_path = f"static/tickets/{ticket_id}.pdf"
     pdf.output(pdf_path)
 

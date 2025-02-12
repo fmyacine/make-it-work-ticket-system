@@ -10,7 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import format_cell_range, CellFormat, Color
 
 
-from api import insert,get_next_ticket_id,generate_qr_code,generate_event_ticket
+from api import insert,get_next_ticket_id,generate_event_ticket
 app = Flask(__name__)
 
 # 🔹 Flask-Mail Configuration
@@ -49,7 +49,7 @@ if not os.path.exists("static/tickets"):
 
 def send_ticket_email(user_email, user_name, event_name, ticket_id):
     """Send a custom email with the ticket attached."""
-    ticket_path = generate_event_ticket(user_name, event_name, ticket_id)
+    ticket_path = generate_event_ticket(user_name, ticket_id)
 
     # Render custom email template
     email_html = render_template(
