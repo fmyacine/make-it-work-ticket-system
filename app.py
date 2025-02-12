@@ -10,7 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import format_cell_range, CellFormat, Color
 
 
-from api import insert,get_next_ticket_id
+from api import insert,get_next_ticket_id,generate_qr_code,generate_event_ticket
 app = Flask(__name__)
 
 # 🔹 Flask-Mail Configuration
@@ -27,45 +27,29 @@ mail = Mail(app)
 if not os.path.exists("static/tickets"):
     os.makedirs("static/tickets")
 
-def generate_qr_code(ticket_id, user_name):
-    qr_data = f"{user_name}"
-    qr = qrcode.QRCode(
-        version=5,  
-        error_correction=qrcode.constants.ERROR_CORRECT_H,  
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(qr_data)
-    qr.make(fit=True)
-    img = qr.make_image(fill="black", back_color="white")
-
-    qr_path = f"static/tickets/{ticket_id}.png"
-    img.save(qr_path)
-    return qr_path
-
-def generate_ticket(user_name, event_name, ticket_id):
-    """Generate a PDF ticket with a QR code."""
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", "B", 16)
+# def generate_ticket(user_name, event_name, ticket_id):
+#     """Generate a PDF ticket with a QR code."""
+#     pdf = FPDF()
+#     pdf.add_page()
+#     pdf.set_font("Arial", "B", 16)
     
-    pdf.cell(200, 10, f"Ticket for {event_name}", ln=True, align="C")
-    pdf.cell(200, 10, f"Name: {user_name}", ln=True, align="C")
-    pdf.cell(200, 10, f"Ticket ID: {ticket_id}", ln=True, align="C")
+#     pdf.cell(200, 10, f"Ticket for {event_name}", ln=True, align="C")
+#     pdf.cell(200, 10, f"Name: {user_name}", ln=True, align="C")
+#     pdf.cell(200, 10, f"Ticket ID: {ticket_id}", ln=True, align="C")
 
-    # Add QR code
-    qr_path = generate_qr_code(ticket_id, user_name)
-    pdf.image(qr_path, x=80, y=50, w=50, h=50)
+#     # Add QR code
+#     qr_path = generate_qr_code(ticket_id, user_name)
+#     pdf.image(qr_path, x=80, y=50, w=50, h=50)
 
-    # Save PDF
-    pdf_path = f"static/tickets/{ticket_id}.pdf"
-    pdf.output(pdf_path)
+#     # Save PDF
+#     pdf_path = f"static/tickets/{ticket_id}.pdf"
+#     pdf.output(pdf_path)
 
-    return pdf_path
+#     return pdf_path
 
 def send_ticket_email(user_email, user_name, event_name, ticket_id):
     """Send a custom email with the ticket attached."""
-    ticket_path = generate_ticket(user_name, event_name, ticket_id)
+    ticket_path = generate_event_ticket(user_name, event_name, ticket_id)
 
     # Render custom email template
     email_html = render_template(
@@ -81,7 +65,7 @@ def send_ticket_email(user_email, user_name, event_name, ticket_id):
 
     # Attach the ticket PDF
     with open(ticket_path, "rb") as ticket_file:
-        msg.attach(f"ticket_{ticket_id}.pdf", "application/pdf", ticket_file.read())
+        msg.attach(f"{ticket_id}.pdf", "application/pdf", ticket_file.read())
 
     mail.send(msg)
 
