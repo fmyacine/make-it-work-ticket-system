@@ -97,13 +97,23 @@ def check_in():
     sheet = get_google_sheet()
     # Find the row containing the person's name
     try:
-        cell = sheet.find(str(id), in_column=0)  # Search only in Column A
-        if cell:
-            return jsonify({"message": "Check-in successful!"}), 200
-    except gspread.exceptions.CellNotFound:
-        pass  # If not found, continue to return error
+        cell = sheet.find(id, in_column=1)  # Search in column A
+        
+        # Get the row number where the hash was found
+        row_number = cell.row
+        
+        # Define the green fill format
+        green_format = CellFormat(backgroundColor=Color(0.56, 0.93, 0.56))  # Light green (RGB 144, 238, 144)
+        
+        # Apply formatting to the entire row
+        format_cell_range(sheet, f"A{row_number}:Z{row_number}", green_format)  # Adjust range as needed
+        
+        green_format = CellFormat(backgroundColor=Color(0, 0, 0))
+        return jsonify({"message": "Check-in successful! Row highlighted."}), 200
     
-    return jsonify({"error": "ID not found!"}), 200
+    except gspread.exceptions.CellNotFound:
+        return jsonify({"error": "ID not found!"}), 200
+    
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
