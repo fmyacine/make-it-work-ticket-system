@@ -95,17 +95,14 @@ def check_in():
     id = data["id"]
     print(id)
     # Find the row containing the person's name
-    cell = sheet.find(id)
-    if cell:
-        # Color the row green if name is found
-        row_number = cell.row
-        range_to_color = f"A{row_number}:Z{row_number}"  
-        fmt = CellFormat(backgroundColor=Color(0, 1, 0))  
-        format_cell_range(sheet, range_to_color, fmt)
-        print({"message": "Check-in successful!"})
-        
-        return jsonify({"message": "Check-in successful!"}), 200
-    return jsonify({"error": "Name not found!"}), 200
+    try:
+        cell = sheet.find(str(id), in_column=0)  # Search only in Column A
+        if cell:
+            return jsonify({"message": "Check-in successful!"}), 200
+    except gspread.exceptions.CellNotFound:
+        pass  # If not found, continue to return error
+    
+    return jsonify({"error": "ID not found!"}), 200
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
