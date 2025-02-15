@@ -64,7 +64,7 @@ def book_ticket():
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
 
-    send_ticket_email(user_email, user_name, event_name, ticket_id)
+    # send_ticket_email(user_email, user_name, event_name, ticket_id)
 
     return jsonify({"message": "Ticket booked successfully!", "ticket_id": ticket_id})
 
@@ -104,11 +104,13 @@ def check_in():
         
         # Define the green fill format
         green_format = CellFormat(backgroundColor=Color(0.56, 0.93, 0.56))  # Light green (RGB 144, 238, 144)
+        white_format = CellFormat(backgroundColor=Color(0, 0, 0))  # Light green (RGB 144, 238, 144)
         
         # Apply formatting to the entire row
         format_cell_range(sheet, f"A{row_number}:Z{row_number}", green_format)  # Adjust range as needed
+        format_cell_range(sheet, f"A{row_number+1}:Z{row_number+1}", white_format)  # Adjust range as needed
+
         
-        green_format = CellFormat(backgroundColor=Color(0, 0, 0))
         return jsonify({"message": "Check-in successful! Row highlighted."}), 200
     
     except gspread.exceptions.CellNotFound:
