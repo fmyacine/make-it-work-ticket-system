@@ -10,6 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import format_cell_range, CellFormat, Color
 
 
+
 from api import insert,get_next_ticket_id,generate_event_ticket
 app = Flask(__name__)
 
@@ -40,7 +41,7 @@ def send_ticket_email(user_email, user_name, event_name, ticket_id):
         ticket_link=f"http://yourwebsite.com/{ticket_path}"
     )
 
-    msg = Message(subject=f"Your Ticket for {event_name}", recipients=[user_email])
+    msg = Message(subject=f"Your Ticket for Make It Work", recipients=[user_email])
     msg.html = email_html
 
     # Attach the ticket PDF
@@ -91,9 +92,9 @@ def check_in():
         except json.JSONDecodeError:
             return {"error": "Invalid QR code data format"}, 400
         
+    id = data["id"].strip()
+    
     sheet = get_google_sheet()
-    id = data["id"]
-    print(id)
     # Find the row containing the person's name
     try:
         cell = sheet.find(str(id), in_column=0)  # Search only in Column A

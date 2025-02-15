@@ -8,23 +8,17 @@ SERVICE_ACCOUNT_FILE = './secret.json'
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
 cred = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-from werkzeug.security import generate_password_hash
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from werkzeug.security import generate_password_hash
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from werkzeug.security import generate_password_hash
+
 import re
 
 def insert(fullname, phonenumber, email, tkt):
-    tkt_ID = fullname + str(tkt)
-    hashed_string = generate_password_hash(tkt_ID)
+    
+    hashed_string = generate_ticket_hash(fullname,str(tkt))
     
     try:
         service = build("sheets", "v4", credentials=cred)
 
-        values = [[hashed_string,fullname, phonenumber, email, ]]
+        values = [[hashed_string.strip(),fullname, phonenumber, email, ]]
         body = {"values": values}
 
         # Insert the row
@@ -77,6 +71,14 @@ def insert(fullname, phonenumber, email, tkt):
         print(f"An error occurred: {error}")
         return error
 
+import hashlib
+
+def generate_ticket_hash(user_name, ticket_id):
+    raw_data = f"{user_name}{ticket_id}".encode()  # Combine user + ticket ID
+    md5_hash = hashlib.md5(raw_data).hexdigest()  # Generate MD5 hash
+    return md5_hash
+
+
 TICKET_FILE = "last_ticket_id.txt"
 import os
 def get_next_ticket_id():
@@ -104,7 +106,7 @@ def generate_qr_code(ticket_id, user_name):
     qr_data = {
         "name": user_name,
         "tickt": ticket_id,
-        "id": generate_password_hash(user_name + ticket_id)
+        "id": generate_ticket_hash(user_name , ticket_id)
     }
 
     # Convert to JSON string before encoding
