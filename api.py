@@ -12,13 +12,13 @@ cred = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FIL
 import re
 
 def insert(fullname, phonenumber, email, tkt):
-    
-    hashed_string = generate_ticket_hash(fullname,str(tkt))
-    
+    hashed_string = generate_ticket_hash(fullname, str(tkt))
+
     try:
         service = build("sheets", "v4", credentials=cred)
 
-        values = [[hashed_string.strip(),fullname, phonenumber, email, ]]
+        # Data to insert
+        values = [[hashed_string.strip(), fullname, phonenumber, email]]
         body = {"values": values}
 
         # Insert the row
@@ -27,24 +27,26 @@ def insert(fullname, phonenumber, email, tkt):
             .values()
             .append(
                 spreadsheetId=sheetID,
-                range='Sheet1!A2:D2',
+                range='Sheet1!A:D',  # Append to columns A to D
                 insertDataOption='INSERT_ROWS',
                 valueInputOption='RAW',
                 body=body
             ).execute()
         )
 
+        # Extract the row number from the updated range
         updated_range = result.get('updates', {}).get('updatedRange', '')  # e.g., "Sheet1!A35:D35"
+        print(updated_range)
+        match = re.search(r'!A(\d+):D\d+', updated_range)
 
-        # Extract the row number safely using regex
-        match = re.search(r'(\d+)', updated_range)  
+        print(match)
         if match:
             row_number = int(match.group(1))  # Convert extracted number to integer
         else:
             print("Could not determine the row number.")
             return
 
-        # Set background color to white
+        # Set background color for the newly inserted row
         requests = [
             {
                 "repeatCell": {
@@ -53,24 +55,30 @@ def insert(fullname, phonenumber, email, tkt):
                         "startRowIndex": row_number - 1,  # Convert to zero-based index
                         "endRowIndex": row_number,
                         "startColumnIndex": 0,
-                        "endColumnIndex": 4,  # Columns A to D
+                        "endColumnIndex": 25,  # Columns A to D
                     },
-                    "cell": {"userEnteredFormat": {"backgroundColor": {"red": 1, "green": 1, "blue": 1}}},
+                    "cell": {"userEnteredFormat": {"backgroundColor": {"red": 1, "green": 1, "blue": 1}}},  # White color
                     "fields": "userEnteredFormat.backgroundColor",
                 }
             }
         ]
 
-        # Apply formatting
-        service.spreadsheets().batchUpdate(spreadsheetId=sheetID, body={"requests": requests}).execute()
+        # Send the formatting request
+        body = {
+            "requests": requests
+        }
 
-        print(f"{(result.get('updates').get('updatedCells'))} cells appended and formatted.")
+        response = service.spreadsheets().batchUpdate(
+            spreadsheetId=sheetID,
+            body=body
+        ).execute()
+
+        print("Response:", response)
         return result
 
     except HttpError as error:
         print(f"An error occurred: {error}")
         return error
-
 import hashlib
 
 def generate_ticket_hash(user_name, ticket_id):
