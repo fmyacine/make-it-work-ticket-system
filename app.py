@@ -27,26 +27,6 @@ mail = Mail(app)
 if not os.path.exists("static/tickets"):
     os.makedirs("static/tickets")
 
-# def generate_ticket(user_name, event_name, ticket_id):
-#     """Generate a PDF ticket with a QR code."""
-#     pdf = FPDF()
-#     pdf.add_page()
-#     pdf.set_font("Arial", "B", 16)
-    
-#     pdf.cell(200, 10, f"Ticket for {event_name}", ln=True, align="C")
-#     pdf.cell(200, 10, f"Name: {user_name}", ln=True, align="C")
-#     pdf.cell(200, 10, f"Ticket ID: {ticket_id}", ln=True, align="C")
-
-#     # Add QR code
-#     qr_path = generate_qr_code(ticket_id, user_name)
-#     pdf.image(qr_path, x=80, y=50, w=50, h=50)
-
-#     # Save PDF
-#     pdf_path = f"static/tickets/{ticket_id}.pdf"
-#     pdf.output(pdf_path)
-
-#     return pdf_path
-
 def send_ticket_email(user_email, user_name, event_name, ticket_id):
     """Send a custom email with the ticket attached."""
     ticket_path = generate_event_ticket(user_name, ticket_id)
@@ -76,10 +56,10 @@ def book_ticket():
 
     user_name = data.get("name")
     user_email = data.get("email")
-    event_name = data.get("event_name", "Tech Conference 2025")
-    ticket_count = get_next_ticket_id()
-    ticket_id = f"{ticket_count}"
-    insert(user_name,1,user_email)
+    event_name = data.get("Make It Work")
+    ticket_id = str(get_next_ticket_id())
+    insert(user_name,1,user_email,ticket_id)
+
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
 
@@ -98,17 +78,24 @@ def get_google_sheet():
     client = gspread.authorize(creds)
     sheet = client.open("make it work").sheet1
     return sheet
-
+import json
 @app.route("/check_in", methods=["POST"])
 def check_in():
     print("scanned")
     data = request.json
-    name = data.get("name")
-    
+    data = data["name"]
+
+    if isinstance(data, str):
+        try:
+            data = json.loads(data)  # Convert back to dictionary
+        except json.JSONDecodeError:
+            return {"error": "Invalid QR code data format"}, 400
+        
     sheet = get_google_sheet()
-    
+    id = data["id"]
+    print(id)
     # Find the row containing the person's name
-    cell = sheet.find(name)
+    cell = sheet.find(id)
     if cell:
         # Color the row green if name is found
         row_number = cell.row
@@ -116,6 +103,7 @@ def check_in():
         fmt = CellFormat(backgroundColor=Color(0, 1, 0))  
         format_cell_range(sheet, range_to_color, fmt)
         print({"message": "Check-in successful!"})
+        
         return jsonify({"message": "Check-in successful!"}), 200
     return jsonify({"error": "Name not found!"}), 200
 

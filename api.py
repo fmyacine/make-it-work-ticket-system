@@ -1,27 +1,33 @@
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
+import json
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SERVICE_ACCOUNT_FILE = './secret.json'
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
 cred = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
+from werkzeug.security import generate_password_hash
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from werkzeug.security import generate_password_hash
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from werkzeug.security import generate_password_hash
+import re
 
-
-def insert(fullname,phonenumber,email):
+def insert(fullname, phonenumber, email, tkt):
+    tkt_ID = fullname + str(tkt)
+    hashed_string = generate_password_hash(tkt_ID)
+    
     try:
         service = build("sheets", "v4", credentials=cred)
 
-        values = [
-        [
-            fullname,phonenumber,email
-        ],
-    ]
-
-
+        values = [[hashed_string,fullname, phonenumber, email, ]]
         body = {"values": values}
+
+        # Insert the row
         result = (
             service.spreadsheets()
             .values()
@@ -33,7 +39,38 @@ def insert(fullname,phonenumber,email):
                 body=body
             ).execute()
         )
-        print(f"{(result.get('updates').get('updatedCells'))} cells appended.")
+
+        updated_range = result.get('updates', {}).get('updatedRange', '')  # e.g., "Sheet1!A35:D35"
+
+        # Extract the row number safely using regex
+        match = re.search(r'(\d+)', updated_range)  
+        if match:
+            row_number = int(match.group(1))  # Convert extracted number to integer
+        else:
+            print("Could not determine the row number.")
+            return
+
+        # Set background color to white
+        requests = [
+            {
+                "repeatCell": {
+                    "range": {
+                        "sheetId": 0,  # Default sheet ID (change if necessary)
+                        "startRowIndex": row_number - 1,  # Convert to zero-based index
+                        "endRowIndex": row_number,
+                        "startColumnIndex": 0,
+                        "endColumnIndex": 4,  # Columns A to D
+                    },
+                    "cell": {"userEnteredFormat": {"backgroundColor": {"red": 1, "green": 1, "blue": 1}}},
+                    "fields": "userEnteredFormat.backgroundColor",
+                }
+            }
+        ]
+
+        # Apply formatting
+        service.spreadsheets().batchUpdate(spreadsheetId=sheetID, body={"requests": requests}).execute()
+
+        print(f"{(result.get('updates').get('updatedCells'))} cells appended and formatted.")
         return result
 
     except HttpError as error:
@@ -63,12 +100,21 @@ def get_next_ticket_id():
 from fpdf import FPDF
 import qrcode
 def generate_qr_code(ticket_id, user_name):
-    """Generate a QR code and return its file path."""
-    qr_data = f"{user_name}"
-    qr = qrcode.make(qr_data)
+    """Generate a QR code with properly formatted JSON data."""
+    qr_data = {
+        "name": user_name,
+        "tickt": ticket_id,
+        "id": generate_password_hash(user_name + ticket_id)
+    }
+
+    # Convert to JSON string before encoding
+    qr_data_json = json.dumps(qr_data)
+
+    qr = qrcode.make(qr_data_json)  # Encode as JSON string, not a Python dictionary
     qr_path = f"static/tickets/{ticket_id}.png"
     qr.save(qr_path)
     return qr_path
+
 
 def generate_event_ticket(user_name,  ticket_id):
     """Generate a PDF ticket with event details and a QR code."""
