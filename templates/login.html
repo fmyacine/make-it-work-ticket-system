@@ -175,18 +175,16 @@
 </head>
 <body>
     <div class="login-card">
-
         <h1 class="login-title">Login</h1>
-     
-        <form id="loginForm" action="/login" method="POST">
-
+    
+        <form id="loginForm">
             <div class="form-group">
                 <div class="input-wrapper">
                     <input type="text" id="email" name="username" placeholder="Username" required>
                 </div>
                 <div class="error-message">Please enter a valid email address</div>
             </div>
-
+    
             <div class="form-group">
                 <div class="input-wrapper">
                     <input type="password" id="password" name="password" placeholder="Password" required>
@@ -200,12 +198,38 @@
                 </div>
                 <div class="error-message">Password must be at least 6 characters</div>
             </div>
-
+    
             <button type="submit" class="sign-in-button">Sign in</button>
-            <div class="success-message">Successfully logged in!</div>
-            
+            <div class="success-message" style="display: none; color: red;">Name and password are false</div>
         </form>
     </div>
+    
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            let username = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+    
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/admin"; // Redirect to admin page
+                } else {
+                    document.querySelector(".success-message").style.display = "block";
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
