@@ -9,7 +9,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import format_cell_range, CellFormat, Color
 
-
+from helper import login_required
 
 from api import insert,get_next_ticket_id,generate_event_ticket
 app = Flask(__name__)
@@ -23,6 +23,15 @@ app.config["MAIL_PASSWORD"] = "ewos dkvc henc rylu"
 app.config["MAIL_DEFAULT_SENDER"] = "fed.myacine@gmail.com"
 
 mail = Mail(app)
+
+
+@app.route("/login",METHODS=["GET","POST"])
+def login():
+    if request.method == "POST":
+        
+
+
+
 
 # 🔹 Ensure 'static/tickets' folder exists
 if not os.path.exists("static/tickets"):
@@ -79,6 +88,8 @@ def get_google_sheet():
     sheet = client.open("make it work").sheet1
     return sheet
 import json
+
+
 @app.route("/check_in", methods=["POST"])
 def check_in():
     print("scanned")
