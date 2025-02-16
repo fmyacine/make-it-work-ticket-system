@@ -55,7 +55,7 @@ def insert(fullname, phonenumber, email, tkt):
                         "startRowIndex": row_number - 1,  # Convert to zero-based index
                         "endRowIndex": row_number,
                         "startColumnIndex": 0,
-                        "endColumnIndex": 25,  # Columns A to D
+                        "endColumnIndex": 26,  # Columns A to D
                     },
                     "cell": {"userEnteredFormat": {"backgroundColor": {"red": 1, "green": 1, "blue": 1}}},  # White color
                     "fields": "userEnteredFormat.backgroundColor",

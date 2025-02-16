@@ -36,7 +36,6 @@ def send_ticket_email(user_email, user_name, event_name, ticket_id):
     email_html = render_template(
         "email.html", 
         user_name=user_name, 
-        event_name=event_name, 
         ticket_id=ticket_id, 
         ticket_link=f"http://yourwebsite.com/{ticket_path}"
     )
@@ -64,7 +63,7 @@ def book_ticket():
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
 
-    # send_ticket_email(user_email, user_name, event_name, ticket_id)
+    send_ticket_email(user_email, user_name, event_name, ticket_id)
 
     return jsonify({"message": "Ticket booked successfully!", "ticket_id": ticket_id})
 
