@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template,session
+from flask_session import Session
 from flask_mail import Mail, Message
 from fpdf import FPDF
 import qrcode
@@ -21,15 +22,19 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "fed.myacine@gmail.com"
 app.config["MAIL_PASSWORD"] = "ewos dkvc henc rylu"
 app.config["MAIL_DEFAULT_SENDER"] = "fed.myacine@gmail.com"
-
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 mail = Mail(app)
 
 
 @app.route("/login",METHODS=["GET","POST"])
 def login():
     if request.method == "POST":
-        
+        username = request.form.get("username")
+        password = request.form.get("password")
 
+        if username == "admin" and password == "cdecdawla":
+            session["user_id"] == 1        
 
 
 
