@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template,session
+from flask import Flask, request, jsonify, render_template,session,redirect
 from flask_session import Session
 from flask_mail import Mail, Message
 from fpdf import FPDF
@@ -35,6 +35,7 @@ def login():
 
         if username == "admin" and password == "cdecdawla":
             session["user_id"] == 1        
+            return redirect("/admin")
 
 
 
