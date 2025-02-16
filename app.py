@@ -32,11 +32,13 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-
+        print(username, password)
         if username == "admin" and password == "cdecdawla":
-            session["user_id"] == 1        
+            print("successf")
+            session["user_id"] = 1        
             return redirect("/admin")
-        
+        else:
+            return redirect("/login")
     return render_template("login.html")
 
 
@@ -86,6 +88,8 @@ def book_ticket():
 
 
 @app.route("/admin",methods=["GET"])
+@login_required
+
 def admin():
     return render_template("admin.html")
 
