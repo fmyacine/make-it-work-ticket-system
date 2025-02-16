@@ -27,7 +27,7 @@ Session(app)
 mail = Mail(app)
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST","GET"])
 def login():
     
     if request.method == "POST":
@@ -43,9 +43,6 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-
-
-# 🔹 Ensure 'static/tickets' folder exists
 if not os.path.exists("static/tickets"):
     os.makedirs("static/tickets")
 
