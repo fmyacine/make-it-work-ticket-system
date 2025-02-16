@@ -36,6 +36,8 @@ def login():
         if username == "admin" and password == "cdecdawla":
             session["user_id"] == 1        
             return redirect("/admin")
+        
+    return render_template("login.html")
 
 
 
