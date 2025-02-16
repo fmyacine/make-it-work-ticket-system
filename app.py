@@ -53,9 +53,7 @@ def send_ticket_email(user_email, user_name, event_name, ticket_id):
     # Render custom email template
     email_html = render_template(
         "email.html", 
-        user_name=user_name, 
-        ticket_id=ticket_id, 
-        ticket_link=f"http://yourwebsite.com/{ticket_path}"
+        user_name=user_name
     )
 
     msg = Message(subject=f"Your Ticket for Make It Work", recipients=[user_email])
