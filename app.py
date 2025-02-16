@@ -27,19 +27,21 @@ Session(app)
 mail = Mail(app)
 
 
-@app.route("/login", methods=["GET","POST"])
+@app.route("/login", methods=["POST"])
 def login():
+    
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        print(username, password)
+        data = request.get_json()  # Get JSON data from request
+        username = data.get("username")
+        password = data.get("password")
+
         if username == "admin" and password == "cdecdawla":
-            print("successf")
-            session["user_id"] = 1        
-            return redirect("/admin")
+            session["user_id"] = 1
+            return jsonify({"success": True})  # Success response
         else:
-            return redirect("/login")
-    return render_template("login.html")
+            return jsonify({"success": False})  # Failure response
+    if request.method == "GET":
+        return render_template("login.html")
 
 
 
