@@ -27,7 +27,7 @@ Session(app)
 mail = Mail(app)
 
 
-@app.route("/login",METHODS=["GET","POST"])
+@app.route("/login", methods=["GET","POST"])
 def login():
     if request.method == "POST":
         username = request.form.get("username")
