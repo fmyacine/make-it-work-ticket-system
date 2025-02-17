@@ -52,7 +52,7 @@ def send_ticket_email(user_email, user_name, event_name, ticket_id):
 
     # Render custom email template
     email_html = render_template(
-        "email.html", 
+        "test.html", 
         user_name=user_name
     )
 
