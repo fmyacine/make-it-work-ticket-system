@@ -123,12 +123,10 @@ def check_in():
         
         # Define the green fill format
         green_format = CellFormat(backgroundColor=Color(0.56, 0.93, 0.56))  # Light green (RGB 144, 238, 144)
-        white_format = CellFormat(backgroundColor=Color(0, 0, 0))  # Light green (RGB 144, 238, 144)
         
         # Apply formatting to the entire row
         format_cell_range(sheet, f"A{row_number}:Z{row_number}", green_format)  # Adjust range as needed
-        format_cell_range(sheet, f"A{row_number+1}:Z{row_number+1}", white_format)  # Adjust range as needed
-
+        
         
         return jsonify({"message": "Check-in successful! Row highlighted."}), 200
     
