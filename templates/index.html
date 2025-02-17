@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make It Work</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="img-icon" href="makeitwork(1)(1).png">
 </head>
@@ -210,33 +210,6 @@
 </div>
 </div>
 
- <!-- <h1 class="Editions-title">Editions</h1>
- <div class="edition-home slidshow-container">
-  
-   <div class="edition1 slides">
-    <div class="desc">
-      <h1>Make It Work v1</h1>
-      <p class="paar">Make It Work, the 1st edition, is an event
-         like no other,  designed to  empower the next > generation 
-         of entrepreneurs & tech enthusiasts.</p>
-    </div>
-    <div class="img-1st">
-      <img src="photo_2025-02-11_21-57-22.jpg" alt="img-1st-edition" style="height: 360px; width: 500px; border-radius: 10px;">
-    </div>
-   </div>
-   <div class="edition2 slides">
-    <div class="desc">
-      <h1>Make It Work v2</h1>
-      <p class="paar">Make It Work, the 2nd edition, is an event
-         like no other,  designed to  empower the next > generation 
-         of entrepreneurs & tech enthusiasts.</p>
-    </div>
-    <div class="img-2st">
-      <img src="photo_2025-02-11_15-14-14.jpg" alt="img-2nd-edition" style="height: 360px; width: 500px; border-radius: 10px;">
-    </div>
-   </div>
- </div>  -->
-
 
 
 
@@ -250,7 +223,7 @@
   <p class="subtitle">
     Want to be part of this event, Register now and get your ticket to Make It Work together ! 
   </p>
-  <form class="form" id="form">
+  <form id="ticketForm" class="form" id="form">
       <div class="input-group">
           <input type="text" class="input-field" id="Full-name" placeholder="Full Name" >
           <p id="fn" class="errorM"></p>
@@ -264,7 +237,7 @@
           <p id="em" class="errorM"> </p>
       </div>
       <div class="btn-now">
-        <button class="r-btn">
+        <button  class="r-btn">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path class="star" d="M8 2L9.7 5.4L13.6 6L10.8 8.8L11.4 12.6L8 10.8L4.6 12.6L5.2 8.8L2.4 6L6.3 5.4L8 2Z" fill="currentColor"/>
               <path class="star sparkle1" d="M3 1L3.4 2L4 1L3.4 0L3 1Z" fill="currentColor"/>
@@ -329,7 +302,7 @@
     .then(response => response.json())
     .then(result => {
         console.log("Success:", result);
-        alert("Ticket booked successfully!");
+        
     })
     .catch(error => {
         console.error("Error:", error);
