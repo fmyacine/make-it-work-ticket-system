@@ -75,9 +75,10 @@ def book_ticket():
 
     user_name = data.get("name")
     user_email = data.get("email")
+    phone = data.get("number")
     event_name = data.get("Make It Work")
     ticket_id = str(get_next_ticket_id())
-    insert(user_name,1,user_email,ticket_id)
+    insert(user_name,phone,user_email,ticket_id)
 
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
