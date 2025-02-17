@@ -309,5 +309,34 @@
   <p class="copyright">Copyright © 2025 Cdec. All Rights Reserved.</p>
 </footer>
 <script src="main.js"></script>
+<script>
+    document.getElementById("ticketForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form from reloading the page
+
+    const name = document.getElementById("Full-name").value;
+    const email = document.getElementById("mail").value;
+    const number = document.getElementById("phone").value;
+
+    const data = { name, email, number };
+
+    fetch("/book-ticket", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log("Success:", result);
+        alert("Ticket booked successfully!");
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Failed to book ticket.");
+    });
+});
+
+</script>
 </body>
 </html>
