@@ -26,6 +26,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 mail = Mail(app)
 
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 @app.route("/login", methods=["POST","GET"])
 def login():
