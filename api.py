@@ -5,8 +5,22 @@ import json
 import os
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
-google_credentials = os.getenv("GOOGLE")
-cred = service_account.Credentials.from_service_account_file(google_credentials, scopes=SCOPES)
+
+import os
+import base64
+
+credentials_path = "credentials.json"
+
+# Get Base64-encoded credentials from environment variable
+b64_creds = os.environ.get("GOOGLE_CLOUD_CREDENTIALS_B64")
+
+if b64_creds:
+    with open(credentials_path, "wb") as f:
+        f.write(base64.b64decode(b64_creds))
+else:
+    raise ValueError("GOOGLE_CLOUD_CREDENTIALS_B64 environment variable is missing.")
+
+cred = service_account.Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
 
 import re
 
