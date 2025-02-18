@@ -15,13 +15,13 @@ from helper import login_required
 from api import insert,get_next_ticket_id,generate_event_ticket
 app = Flask(__name__)
 
-# 🔹 Flask-Mail Configuration
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "fed.myacine@gmail.com"
-app.config["MAIL_PASSWORD"] = "ewos dkvc henc rylu"
-app.config["MAIL_DEFAULT_SENDER"] = "fed.myacine@gmail.com"
+app.config['MAIL_SERVER'] = 'smtp.zoho.com'
+app.config['MAIL_PORT'] = 587  # Use 587 if TLS
+app.config['MAIL_USE_SSL'] = False  # Set to False if using TLS
+app.config['MAIL_USE_TLS'] = True  # Set to True if using TLS
+app.config['MAIL_USERNAME'] = 'no-reply@makeitwork.fwh.is'
+app.config['MAIL_PASSWORD'] = 'yacineboy'  # Use an App Password if 2FA is enabled
+app.config['MAIL_DEFAULT_SENDER'] = 'no-reply@makeitwork.fwh.is'
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 mail = Mail(app)
