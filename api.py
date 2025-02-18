@@ -2,12 +2,11 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import json
-
+import os
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SERVICE_ACCOUNT_FILE = './secret.json'
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
-cred = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
+google_credentials = json.loads(os.getenv("GOOGLE_CLOUD_CREDENTIALS"))
+cred = service_account.Credentials.from_service_account_file(google_credentials, scopes=SCOPES)
 
 import re
 
