@@ -6,53 +6,84 @@ let form=document.getElementById("form");
  
 
 
-form.addEventListener("submit",(e)=>{
-    
-    inc=true; 
-       //full name 
-    const errfn=document.getElementById("fn");
-    const fnregex=/^[A-Za-z][a-z]+(\s[a-zA-Z][a-z]+)+$/;
-    
-    if(fname.value===""){
-        inc=false; 
-        errfn.innerHTML="this field is required";
-   
-    } else if(! fnregex.test(fname.value)){
-        inc=false; 
-       errfn.innerHTML="Invalid full name";
-    } else{ errfn.innerHTML=""; }
+form.addEventListener("submit", (e) => {
+    let inc = true;
 
-          //email
-     const errm=document.getElementById("em");  
-      const mregex=/^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/; 
-    if(email.value===""){
-        inc=false; 
-        errm.innerHTML="this field is required";
-   
-    } else if(! mregex.test(email.value)){
-        inc=false; 
-       errm.innerHTML="Invalid email";
-    } else{ errm.innerHTML=""; }
+    // Full name validation
+    const errfn = document.getElementById("fn");
+    const fname = document.getElementById("Full-name");
+    const fnregex = /^[A-Za-z][a-z]+(\s[a-zA-Z][a-z]+)+$/;
 
-          //phone number
-    const errnumber=document.getElementById("phn");
-    const nregex=/^(?:\+213\s?|0)[5-7](?:[\s.-]?[0-9]{2}){4}$/;
+    if (fname.value === "") {
+        inc = false;
+        errfn.innerHTML = "This field is required";
+    } else if (!fnregex.test(fname.value)) {
+        inc = false;
+        errfn.innerHTML = "Invalid full name";
+    } else {
+        errfn.innerHTML = "";
+    }
 
-    if(pnumber.value===""){
-        inc=false; 
-        errnumber.innerHTML="this field is required";
-   
-    } else if(! nregex.test(pnumber.value)){
-        inc=false; 
-       errnumber.innerHTML="Invalid phone number";
-    } else{ errnumber.innerHTML=""; } 
+    // Email validation
+    const errm = document.getElementById("em");
+    const email = document.getElementById("mail");
+    const mregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/;
 
-    if(inc==false){
-        e.preventDefault(); 
-      }
-     
-     
- });
+    if (email.value === "") {
+        inc = false;
+        errm.innerHTML = "This field is required";
+    } else if (!mregex.test(email.value)) {
+        inc = false;
+        errm.innerHTML = "Invalid email";
+    } else {
+        errm.innerHTML = "";
+    }
+
+    // Phone number validation
+    const errnumber = document.getElementById("phn");
+    const pnumber = document.getElementById("phone");
+    const nregex = /^(?:\+213\s?|0)[5-7](?:[\s.-]?[0-9]{2}){4}$/;
+
+    if (pnumber.value === "") {
+        inc = false;
+        errnumber.innerHTML = "This field is required";
+    } else if (!nregex.test(pnumber.value)) {
+        inc = false;
+        errnumber.innerHTML = "Invalid phone number";
+    } else {
+        errnumber.innerHTML = "";
+    }
+
+    // If validation fails, prevent form submission
+    if (inc === false) {
+        e.preventDefault();
+        return; // Stop form submission
+    }
+
+    // If everything is valid, continue with AJAX request
+    const data = {
+        name: fname.value,
+        email: email.value,
+        number: pnumber.value,
+    };
+
+    fetch("/book-ticket", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    .then((result) => {
+        console.log("Success:", result);
+        alert("Ticket booked successfully!");
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        alert("Failed to book ticket.");
+    });
+});
 
 
 
