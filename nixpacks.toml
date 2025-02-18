@@ -1,0 +1,3 @@
+[start]
+
+cmd = "gunicord main:main"
