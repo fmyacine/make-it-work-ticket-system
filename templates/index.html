@@ -46,7 +46,7 @@
 </header>
 </div>
 <!--the timer is here-->
-<h2 class="hours-txt">Hours Left !</h2>
+<h2 class="hours-txt">Time Left !</h2>
 <div class="timer-container" id="home">
 
   <div class="timer">
@@ -90,7 +90,7 @@
    <div class="photo-desc">
    
     <div class="home-img">
-      <img src="photo_2025-02-11_15-18-35.jpg" alt="make it work*3" style=" height: 400px; width: 300px; ">
+      <img src="/static/photo_2025-02-11_15-18-35.jpg" alt="make it work*3" style=" height: 400px; width: 300px; ">
     </div>
    </div>
  </div>
@@ -116,7 +116,7 @@
  </div>
 
  <div class="photo-about">
-   <img src="photo_2025-02-11_22-13-56.jpg" alt="about-img" style="height: 400px; width: 350px; border-radius: 10px; box-shadow: 0 0 50px 1px #eead15">
+   <img src="/static/photo_2025-02-11_22-13-56.jpg" alt="about-img" style="height: 400px; width: 350px; border-radius: 10px; box-shadow: 0 0 50px 1px #eead15">
  </div>
  </div>
  
@@ -201,7 +201,7 @@
              of entrepreneurs & tech enthusiasts.</p>
         </div>
         <div class="img-2st">
-          <img src="photo_2025-02-11_15-14-14.jpg" alt="img-2nd-edition" style="height: 360px; width: 500px; border-radius: 10px;">
+          <img src="/static/photo_2025-02-18_19-31-13.jpg" alt="img-2nd-edition" style="height: 360px; width: 500px; border-radius: 10px;">
         </div>
        </div>
     </div>
@@ -236,6 +236,7 @@
           <input type="email" class="input-field" id="mail" placeholder="Email" >
           <p id="em" class="errorM"> </p>
       </div>
+      <p id="result" class="errorM"></p>
       <div class="btn-now">
         <button  class="r-btn">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -256,10 +257,10 @@
   <div class="footer-container" id="contact">
    <div class="logos">
       <div class="left">
-          <img src="cdec-logo(1)(1).png" alt="Logo 1">
+          <img src="/static/cdec-logo(1)(1).png" alt="Logo 1">
       </div>
       <div class="middle">
-          <img src="makeitwork(1)(1).png" alt="Logo 2">
+          <img src="/static/miwlogo.png" alt="Logo 2">
       </div>
    </div>
     <div class="contact">
@@ -292,22 +293,7 @@
 
     const data = { name, email, number };
 
-    fetch("/book-ticket", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log("Success:", result);
-        
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Failed to book ticket.");
-    });
+    
 });
 
 </script>

@@ -67,22 +67,35 @@ form.addEventListener("submit", (e) => {
         number: pnumber.value,
     };
 
-    fetch("/book-ticket", {
+    const resultElement = document.getElementById("result");
+
+fetch("/book-ticket", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
     })
-    .then((response) => response.json())
-    .then((result) => {
+    .then(response => response.json())
+    .then(result => {
         console.log("Success:", result);
-        alert("Ticket booked successfully!");
+        resultElement.textContent = "Ticket booked! Please check your e-mail inbox.";
+        resultElement.style.display = "block"; // Show the message
+
+        setTimeout(() => {
+            resultElement.style.display = "none"; // Hide after 3 seconds
+        }, 3000);
     })
-    .catch((error) => {
+    .catch(error => {
         console.error("Error:", error);
-        alert("Failed to book ticket.");
+        resultElement.textContent = "Failed to book a ticket! Please try again later.";
+        resultElement.style.display = "block"; // Show the message
+
+        setTimeout(() => {
+            resultElement.style.display = "none"; // Hide after 3 seconds
+        }, 3000);
     });
+
 });
 
 

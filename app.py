@@ -1,16 +1,12 @@
 from flask import Flask, request, jsonify, render_template,session,redirect
 from flask_session import Session
 from flask_mail import Mail, Message
-from fpdf import FPDF
-import qrcode
-from io import BytesIO
-import random
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import format_cell_range, CellFormat, Color
 
-from helper import login_required
+from helper import login_required,validate_phone_number,is_valid_email
 
 from api import insert,get_next_ticket_id,generate_event_ticket
 app = Flask(__name__)
@@ -20,7 +16,7 @@ app.config['MAIL_PORT'] = 587  # Use 587 if TLS
 app.config['MAIL_USE_SSL'] = False  # Set to False if using TLS
 app.config['MAIL_USE_TLS'] = True  # Set to True if using TLS
 app.config['MAIL_USERNAME'] = 'no-reply@makeitwork.fwh.is'
-app.config['MAIL_PASSWORD'] = 'yacineboy'  # Use an App Password if 2FA is enabled
+app.config['MAIL_PASSWORD'] = 'yacineboy'  
 app.config['MAIL_DEFAULT_SENDER'] = 'no-reply@makeitwork.fwh.is'
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -49,7 +45,7 @@ def login():
 if not os.path.exists("static/tickets"):
     os.makedirs("static/tickets")
 
-def send_ticket_email(user_email, user_name, event_name, ticket_id):
+def send_ticket_email(user_email, user_name, ticket_id):
     """Send a custom email with the ticket attached."""
     ticket_path = generate_event_ticket(user_name, ticket_id)
 
@@ -76,14 +72,19 @@ def book_ticket():
     user_name = data.get("name")
     user_email = data.get("email")
     phone = data.get("number")
-    event_name = data.get("Make It Work")
-    ticket_id = str(get_next_ticket_id())
-    insert(user_name,phone,user_email,ticket_id)
+
+
 
     if not user_name or not user_email:
         return jsonify({"error": "Name and Email are required!"}), 400
 
-    send_ticket_email(user_email, user_name, event_name, ticket_id)
+    if not validate_phone_number(phone) or not is_valid_email(user_email):
+        return jsonify({"error": "Name and Email are required!"}), 400
+    
+    ticket_id = str(get_next_ticket_id())
+    insert(user_name,phone,user_email,ticket_id)
+    
+    send_ticket_email(user_email, user_name, ticket_id)
 
     return jsonify({"message": "Ticket booked successfully!", "ticket_id": ticket_id})
 
