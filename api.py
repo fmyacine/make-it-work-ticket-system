@@ -5,7 +5,7 @@ import json
 import os
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
-google_credentials = os.getenv("GOOGLE_CLOUD_CREDENTIALS")
+google_credentials = os.getenv("GOOGLE")
 cred = service_account.Credentials.from_service_account_file(google_credentials, scopes=SCOPES)
 
 import re
