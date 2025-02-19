@@ -55,9 +55,9 @@ submit.addEventListener("click", (e) => {
     }
 
     // Show loading spinner & disable button
+    const originalContent = submit.innerHTML;
     submit.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div> Loading...`;
     submit.disabled = true;
-    const originalContent = submit.innerHTML;
     // Prepare data
     const data = {
         name: fname.value,
