@@ -3,7 +3,7 @@ let fname=document.getElementById("Full-name");
 let email=document.getElementById("mail");
 let pnumber=document.getElementById("phone"); 
 let form=document.getElementById("form");
- 
+let submit = document.getElementById("submitbutton")
 
 
 form.addEventListener("submit", (e) => {
@@ -56,8 +56,7 @@ form.addEventListener("submit", (e) => {
 
     // If validation fails, prevent form submission
     if (inc === false) {
-        e.preventDefault();
-        return; // Stop form submission
+        submit.classList.add("rbtnact")
     }
 
     // If everything is valid, continue with AJAX request

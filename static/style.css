@@ -656,7 +656,7 @@ body{
     padding: 10px 0 30px 0;
 }
 .r-btn {
-    background: #eead15;
+    background: #e1d3b3;
     border: 2px solid rgba(59, 130, 246, 0.5);
     padding: 8px 30px;
     border-radius: 10px;
@@ -668,6 +668,11 @@ body{
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
+    cursor:none;
+}
+
+.r-btnact{
+    background-color: #eead15;
     cursor: pointer;
 }
 
