@@ -1,10 +1,4 @@
-// validation of form
-let fname=document.getElementById("Full-name"); 
-let email=document.getElementById("mail");
-let pnumber=document.getElementById("phone"); 
-let form=document.getElementById("form");
-
-let submit = document.getElementById("submitbutton")
+let submit = document.getElementById("submitbutton");
 
 submit.addEventListener("click", (e) => {
     let inc = true;
@@ -55,12 +49,16 @@ submit.addEventListener("click", (e) => {
     }
 
     // If validation fails, prevent form submission
-    if (inc === false) {
+    if (!inc) {
         e.preventDefault();
-        return; // Stop form submission
+        return;
     }
 
-    // If everything is valid, continue with AJAX request
+    // Show loading spinner & disable button
+    submit.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div> Loading...`;
+    submit.disabled = true;
+    const originalContent = submit.innerHTML;
+    // Prepare data
     const data = {
         name: fname.value,
         email: email.value,
@@ -69,7 +67,7 @@ submit.addEventListener("click", (e) => {
 
     const resultElement = document.getElementById("result");
 
-fetch("/book-ticket", {
+    fetch("/book-ticket", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -80,24 +78,28 @@ fetch("/book-ticket", {
     .then(result => {
         console.log("Success:", result);
         resultElement.textContent = "Ticket booked! Please check your e-mail inbox.";
-        resultElement.style.display = "block"; // Show the message
+        resultElement.style.display = "block";
 
         setTimeout(() => {
-            resultElement.style.display = "none"; // Hide after 3 seconds
+            resultElement.style.display = "none";
         }, 3000);
     })
     .catch(error => {
         console.error("Error:", error);
         resultElement.textContent = "Failed to book a ticket! Please try again later.";
-        resultElement.style.display = "block"; // Show the message
+        resultElement.style.display = "block";
 
         setTimeout(() => {
-            resultElement.style.display = "none"; // Hide after 3 seconds
+            resultElement.style.display = "none";
         }, 3000);
+    })
+    .finally(() => {
+        // Restore button after request is complete
+        submit.innerHTML = originalContent; 
+          
+        submit.disabled = false;
     });
-
 });
-
 
 
 
