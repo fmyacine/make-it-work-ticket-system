@@ -668,14 +668,7 @@ body{
     font-weight: 600;
     text-decoration: none;
     transition: all 0.2s ease;
-    pointer-events: none; /* Prevents clicking */
-  opacity: 0.5; /* Makes it look disabled */
-}
-
-.r-btnact{
-    pointer-events:all; /* Prevents clicking */
-  opacity: 0.5; /* Makes it look disabled */
-
+    cursor: pointer;
 }
 
 .r-btn:hover {

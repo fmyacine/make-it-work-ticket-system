@@ -3,10 +3,10 @@ let fname=document.getElementById("Full-name");
 let email=document.getElementById("mail");
 let pnumber=document.getElementById("phone"); 
 let form=document.getElementById("form");
+
 let submit = document.getElementById("submitbutton")
 
-
-form.addEventListener("submit", (e) => {
+submit.addEventListener("click", (e) => {
     let inc = true;
 
     // Full name validation
@@ -56,7 +56,8 @@ form.addEventListener("submit", (e) => {
 
     // If validation fails, prevent form submission
     if (inc === false) {
-        submit.classList.add("rbtnact")
+        e.preventDefault();
+        return; // Stop form submission
     }
 
     // If everything is valid, continue with AJAX request
@@ -115,18 +116,13 @@ let cout= setInterval(()=>{
     let minuts= Math.floor((dateDF %(1000*60*60))/60000);
     let seconds = Math.floor((dateDF % (1000*60))/1000);
 
-     console.log(days); 
-     console.log(hours); 
-     console.log(minuts); 
-     console.log(seconds); 
-     console.log("###############################"); 
 
      document.querySelector("#days").innerHTML =days <10 ? `0${days}`: days;
      document.querySelector("#hours").innerHTML =hours <10 ? `0${hours}`: hours;
      document.querySelector("#minutes").innerHTML =minuts <10 ? `0${minuts}`: minuts;
      document.querySelector("#seconds").innerHTML =seconds <10 ? `0${seconds}`: seconds;
 
-if(dateDF<0){ss
+if(dateDF<0){
     clearInterval(cd); 
 }
 
