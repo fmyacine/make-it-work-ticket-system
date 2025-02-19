@@ -82,7 +82,7 @@ def book_ticket():
         return jsonify({"error": "Name and Email are required!"}), 400
     
     ticket_id = str(get_next_ticket_id())
-    insert(user_name,phone,user_email,ticket_id)
+    # insert(user_name,phone,user_email,ticket_id)
     
     send_ticket_email(user_email, user_name, ticket_id)
 
