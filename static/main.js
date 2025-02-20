@@ -7,7 +7,7 @@ submit.addEventListener("click", (e) => {
     // Full name validation
     const errfn = document.getElementById("fn");
     const fname = document.getElementById("Full-name");
-    const fnregex = /^[A-Za-z][a-z]+(\s[a-zA-Z][a-z]+)+$/;
+    const fnregex = /^[A-Za-z]+(\s[A-Za-z]+)+$/;
 
     if (fname.value === "") {
         inc = false;
@@ -22,7 +22,7 @@ submit.addEventListener("click", (e) => {
     // Email validation
     const errm = document.getElementById("em");
     const email = document.getElementById("mail");
-    const mregex = /^[A-Za-z]+(\s[A-Za-z]+)+$/;
+    const mregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/;
 
     if (email.value === "") {
         inc = false;
