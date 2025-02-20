@@ -95,9 +95,21 @@ def book_ticket():
 def admin():
     return render_template("admin.html")
 
+import base64
 
 def get_google_sheet():
-    creds = ServiceAccountCredentials.from_json_keyfile_name(os.environ.get("GOOGLE_CLOUD_CREDENTIALS_B64"), ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+    credentials_path = "credentials.json"
+
+# Get Base64-encoded credentials from environment variable
+    b64_creds = os.environ.get("GOOGLE_CLOUD_CREDENTIALS_B64")
+
+    if b64_creds:
+        with open(credentials_path, "wb") as f:
+            f.write(base64.b64decode(b64_creds))
+    else:
+        raise ValueError("GOOGLE_CLOUD_CREDENTIALS_B64 environment variable is missing.")
+
+    creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
     client = gspread.authorize(creds)
     sheet = client.open("make it work").sheet1
     return sheet
