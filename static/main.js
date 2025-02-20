@@ -22,7 +22,7 @@ submit.addEventListener("click", (e) => {
     // Email validation
     const errm = document.getElementById("em");
     const email = document.getElementById("mail");
-    const mregex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/;
+    const mregex = /^[A-Za-z]+(\s[A-Za-z]+)+$/;
 
     if (email.value === "") {
         inc = false;
