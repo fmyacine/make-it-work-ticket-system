@@ -97,7 +97,7 @@ def admin():
 
 
 def get_google_sheet():
-    creds = ServiceAccountCredentials.from_json_keyfile_name("./secret.json", ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+    creds = ServiceAccountCredentials.from_json_keyfile_name(os.environ.get("GOOGLE_CLOUD_CREDENTIALS_B64"), ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
     client = gspread.authorize(creds)
     sheet = client.open("make it work").sheet1
     return sheet

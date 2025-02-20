@@ -1,6 +1,7 @@
 let submit = document.getElementById("submitbutton");
 
 submit.addEventListener("click", (e) => {
+    
     let inc = true;
 
     // Full name validation
@@ -66,7 +67,7 @@ submit.addEventListener("click", (e) => {
     };
 
     const resultElement = document.getElementById("result");
-
+    
     fetch("/book-ticket", {
         method: "POST",
         headers: {
@@ -82,7 +83,7 @@ submit.addEventListener("click", (e) => {
 
         setTimeout(() => {
             resultElement.style.display = "none";
-        }, 3000);
+        }, 6000);
     })
     .catch(error => {
         console.error("Error:", error);
@@ -91,12 +92,11 @@ submit.addEventListener("click", (e) => {
 
         setTimeout(() => {
             resultElement.style.display = "none";
-        }, 3000);
+        }, 6000);
     })
     .finally(() => {
         // Restore button after request is complete
         submit.innerHTML = originalContent; 
-          
         submit.disabled = false;
     });
 });
