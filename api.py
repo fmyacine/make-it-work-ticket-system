@@ -182,7 +182,7 @@ def generate_event_ticket(user_name,  ticket_id):
     pdf.set_font("Arial", "", 12)
     pdf.multi_cell(0, 10, "Saad Dahleb Blida University, Auditorim, Ouled Yaich 09000, Algeria" )
     
-    pdf.cell(0, 10, "Tuesday 25 Febraury 2025 at 09:00 - samedi 25 february 2025 At 15:00 (heure : Algérie)", ln=True)
+    pdf.cell(0, 10, "Tuesday 25 Febraury 2025 at 09:00 - Tuesday 25 february 2025 At 15:00 (heure : Algérie)", ln=True)
     
     # Order Details
     pdf.ln(10)
