@@ -106,7 +106,7 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-def generate_ticket(credentials_path, sheetID):
+def get_next_ticket_id():
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
     
     creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, SCOPES)
