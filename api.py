@@ -5,7 +5,7 @@ import json
 import os
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 sheetID = '1tUdJce9qB0fp1IUDyOEF_NNyJz_6Bm7_G2U28ql6cps'
-
+import gspread
 import os
 import base64
 
@@ -21,7 +21,7 @@ else:
     raise ValueError("GOOGLE_CLOUD_CREDENTIALS_B64 environment variable is missing.")
 
 cred = service_account.Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
-
+client = gspread.authorize(cred)
 import re
 
 def insert(fullname, phonenumber, email, tkt):
@@ -103,13 +103,16 @@ def generate_ticket_hash(user_name, ticket_id):
 
 import os
 def get_next_ticket_id():
-    TICKET_FILE = os.environ.get("TKT")
-    print(TICKET_FILE)
-    if not TICKET_FILE:
+    sheet = client.open_by_key(sheetID).worksheet("make it work")
+
+# Count the number of non-empty rows
+    next_ticket_number = len(sheet.get_all_values())
+    
+    print(next_ticket_number)  
+    if not next_ticket_number:
         last_ticket_id = -1  # Start from 0 when first ticket is created
     else:
-        
-        last_ticket_id = int(TICKET_FILE)
+        last_ticket_id = int(next_ticket_number)
 
     # Increment ticket ID
     next_ticket_id = (last_ticket_id + 1) % 10000  # Loop back after 9999
