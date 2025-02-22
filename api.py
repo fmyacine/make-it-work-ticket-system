@@ -100,22 +100,22 @@ def generate_ticket_hash(user_name, ticket_id):
     return md5_hash
 
 
-TICKET_FILE = "last_ticket_id.txt"
+TICKET_FILE = os.environ.get("TKT")
+
 import os
 def get_next_ticket_id():
     
     if not os.path.exists(TICKET_FILE):
         last_ticket_id = -1  # Start from 0 when first ticket is created
     else:
-        with open(TICKET_FILE, "r") as file:
-            last_ticket_id = int(file.read().strip())
+        
+        last_ticket_id = int(TICKET_FILE)
 
     # Increment ticket ID
     next_ticket_id = (last_ticket_id + 1) % 10000  # Loop back after 9999
 
     # Save the new ticket ID
-    with open(TICKET_FILE, "w") as file:
-        file.write(str(next_ticket_id))
+    os.environ["SECRET_KEY"] = int(next_ticket_id)
 
     return f"TKT-{next_ticket_id:04d}"
 
