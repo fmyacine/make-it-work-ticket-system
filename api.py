@@ -109,7 +109,7 @@ def get_next_ticket_id():
     sheet = client.open_by_key(sheetID).worksheet("Sheet1")
 
 # Count the number of rows (excluding header if needed)
-    next_ticket_number = len(sheet.get_all_values())  # Get the row count
+    next_ticket_number = int(len(sheet.get_all_values())) + 6  # Get the row count
 
 
     print(next_ticket_number)
