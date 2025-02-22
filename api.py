@@ -114,14 +114,15 @@ def get_next_ticket_id():
     sheet = client.open_by_key(sheetID).worksheet("Sheet1")
 
     # Read the current ticket number from Z2
-    cell_value = sheet.acell("Z2").value  
+    cell_value = sheet.acell("Z2").value
+
     last_ticket_id = int(cell_value) if cell_value else 0  # Default to 0 if empty
 
     # Generate the next ticket ID
     next_ticket_id = (last_ticket_id + 1) % 10000  # Loop back after 9999
 
     # Update the cell with the new ticket number
-    sheet.update("Z2", next_ticket_id)
+    sheet.update("Z2", [[next_ticket_id]])  # Wrap in double brackets
 
     return f"TKT-{next_ticket_id:04d}"
 
