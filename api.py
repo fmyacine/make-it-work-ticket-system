@@ -115,7 +115,7 @@ def get_next_ticket_id():
     next_ticket_id = (last_ticket_id + 1) % 10000  # Loop back after 9999
 
     # Save the new ticket ID
-    os.environ["SECRET_KEY"] = int(next_ticket_id)
+    os.environ["SECRET_KEY"] = next_ticket_id
 
     return f"TKT-{next_ticket_id:04d}"
 
