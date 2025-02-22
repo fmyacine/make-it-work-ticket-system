@@ -103,24 +103,25 @@ def generate_ticket_hash(user_name, ticket_id):
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 import os
-def get_next_ticket_id():
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+def generate_ticket(credentials_path, sheetID):
+    SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+    
     creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, SCOPES)
     client = gspread.authorize(creds)
     sheet = client.open_by_key(sheetID).worksheet("Sheet1")
 
-# Count the number of rows (excluding header if needed)
-    next_ticket_number = int(len(sheet.get_all_values())) + 6  # Get the row count
+    # Read the current ticket number from Z2
+    cell_value = sheet.acell("Z2").value  
+    last_ticket_id = int(cell_value) if cell_value else 0  # Default to 0 if empty
 
-
-    print(next_ticket_number)
-    if not next_ticket_number:
-        last_ticket_id = -1  # Start from 0 when first ticket is created
-    else:
-        
-        last_ticket_id = int(next_ticket_number)
-
+    # Generate the next ticket ID
     next_ticket_id = (last_ticket_id + 1) % 10000  # Loop back after 9999
 
+    # Update the cell with the new ticket number
+    sheet.update("Z2", next_ticket_id)
 
     return f"TKT-{next_ticket_id:04d}"
 
