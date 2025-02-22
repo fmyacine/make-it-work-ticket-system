@@ -100,12 +100,12 @@ def generate_ticket_hash(user_name, ticket_id):
     return md5_hash
 
 
-TICKET_FILE = os.environ.get("TKT")
 
 import os
 def get_next_ticket_id():
-    
-    if not os.path.exists(TICKET_FILE):
+    TICKET_FILE = os.environ.get("TKT")
+    print(TICKET_FILE)
+    if not TICKET_FILE:
         last_ticket_id = -1  # Start from 0 when first ticket is created
     else:
         
